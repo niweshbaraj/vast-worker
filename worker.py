@@ -6,6 +6,12 @@ MODEL_SERVER_URL = "http://127.0.0.1"
 MODEL_SERVER_PORT = 8000
 MODEL_LOG_FILE = "/var/log/model.log"
 
+
+def workload(payload):
+    # cost ~ image size
+    return len(payload["image"]) / 50000
+
+
 def benchmark_generator() -> dict:
     """Generate benchmark payload - minimal base64 data"""
     return {"image": base64.b64encode(b"test").decode("utf-8")}
@@ -19,8 +25,9 @@ worker_config = WorkerConfig(
         HandlerConfig(
             route="/process",
             allow_parallel_requests=False,
-            max_queue_time=60.0,
-            workload_calculator=lambda p: 1.0,
+            max_queue_time=2.0,
+            # workload_calculator=lambda p: 1.0,
+            workload_calculator=workload,
             benchmark_config=BenchmarkConfig(
                 generator=benchmark_generator,
                 runs=4,
