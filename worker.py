@@ -24,8 +24,8 @@ worker_config = WorkerConfig(
     handlers=[
         HandlerConfig(
             route="/process",
-            allow_parallel_requests=False,
-            max_queue_time=2.0,
+            allow_parallel_requests=True,
+            max_queue_time=10.0,
             # workload_calculator=lambda p: 1.0,
             workload_calculator=workload,
             benchmark_config=BenchmarkConfig(
